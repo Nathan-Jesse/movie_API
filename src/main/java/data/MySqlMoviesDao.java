@@ -3,6 +3,7 @@ package data;
 import com.mysql.jdbc.Driver;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MySqlMoviesDao implements MoviesDao {
@@ -25,7 +26,27 @@ public class MySqlMoviesDao implements MoviesDao {
 
     @Override
     public List<Movie> all() throws SQLException {
-        return null;
+        Statement statement = connection.createStatement();
+
+        ResultSet rs = statement.executeQuery("SELECT * FROM movies");
+
+        List<Movie> movies = new ArrayList<>();
+
+        while (rs.next()) {
+            movies.add(new Movie(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    rs.getInt("year"),
+                    rs.getString("director"),
+                    rs.getString("actors"),
+                    rs.getInt("rating"),
+                    rs.getString("poster"),
+                    rs.getString("genre"),
+                    rs.getString("plot")
+            ));
+        }
+
+        return movies;
     }
 
     @Override
@@ -77,10 +98,42 @@ public class MySqlMoviesDao implements MoviesDao {
     @Override
     public void update(Movie movie) throws SQLException {
 
+        String sql = "UPDATE movies" +
+                "SET title = '?', year = '?', director = '?', actor = '?' " +
+                "poster = '?', genre = '?', plot = '?', rating = '?'" +
+                "Where id = '?'";
+
+            PreparedStatement statement = connection.prepareStatement(sql.toString());
+
+
+        statement.setString(1, movie.getTitle());
+        statement.setInt( 2, movie.getYear());
+        statement.setString( 3, movie.getDirector());
+        statement.setString( 4, movie.getActors());
+        statement.setString( 5, movie.getPoster());
+        statement.setString( 6, movie.getGenre());
+        statement.setString( 7, movie.getPlot());
+        statement.setInt( 8, movie.getRating());
+        statement.setInt( 9, movie.getId());
+
+        statement.executeUpdate();
+
     }
 
     @Override
     public void destroy(int id) throws SQLException {
 
+        String sql =
+                "DELETE FROM movies " +
+                        "WHERE id = ?";
+
+        PreparedStatement statement = connection.prepareStatement(sql.toString());
+
+        statement.setInt(1, id);
+
+        statement.execute();
+
     }
+
+
 }
