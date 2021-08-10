@@ -12,5 +12,18 @@ public class HelloWorldServlet extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         out.println("Hello, World!");
+
+//        try {
+//            PrintWriter out = response.getWriter();
+//            out.println("I swear I will not make another Hello World App. :) ");
+//        } catch (Exception ex) {
+//            System.out.println(ex.getMessage());
+//        }
+
+
+
+
+
     }
+
 }
